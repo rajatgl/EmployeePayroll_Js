@@ -51,11 +51,15 @@ class EmployeePayroll{
     }
     //invalidate future dates
     get startDate(){return this._startDate}
-    set startDate(startDate){
+    set startDate(startdate){
+        let date
         const currentDate = new Date()
-        const date = new Date(startDate)
-        if(date<=currentDate || startDate == undefined){
-            this._startDate = startDate
+        if(startdate!=undefined){
+            startdate = startdate.split("/")
+            date = new Date(startdate[2],startdate[1]-1,startdate[0])
+        }
+        if(startdate == undefined||date.getTime()<=currentDate.getTime()){
+            this._startDate = startdate
             return;
         }
         else
@@ -67,21 +71,24 @@ class EmployeePayroll{
         if(this.gender == undefined && this.startDate == undefined)
             return "id = "+this.id+", name = "+this.name+", salary = "+this.salary;
         else{
-            return "id = "+this.id+", name = "+this.name+", salary = "+this.salary+", gender = "+this.gender+", start Date = "+this.startDate.toLocaleDateString("en-IN");
+            //const option = { day: 'numeric', month: 'numeric', year: 'numeric'};
+            const date = new Date(this.startDate).toLocaleDateString("en-US");
+            return "id = "+this.id+", name = "+this.name+", salary = "+this.salary+", gender = "+this.gender+", start Date = "+date;
         }
     }
 }
 
-
 try{
-    let employee = new EmployeePayroll(2,"Rajat",50000)
+    let employee = new EmployeePayroll(1,"Rajat",50000)
     console.log(employee.toString())
 }catch(e){
     console.error(e)
 }
 
 try{
-    let employee2 = new EmployeePayroll(2,"Rajat",30000.00,'M',new Date())
+    let employee2 = new EmployeePayroll(2,"Rajat",30000.00,'M',"3/6/2021")
+    console.log(employee2.toString())
+    employee2.startDate = "4/6/2021"   //invalid date
     console.log(employee2.toString())
 }catch(e){
     console.error(e)
